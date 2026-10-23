@@ -1,7 +1,7 @@
 services:
 
     unbound-mailcow:
-      image: ghcr.io/mailcow/unbound:1.24
+      image: ghcr.io/mailcow/unbound:1.24@sha256:8d67dc0d33ddfce2cfcde19a7f65eecad521cc90c58581d2fa6e4b65305aa68c
       environment:
         - TZ=${TZ}
         - SKIP_UNBOUND_HEALTHCHECK=${SKIP_UNBOUND_HEALTHCHECK:-n}
@@ -17,7 +17,7 @@ services:
             - unbound
 
     mysql-mailcow:
-      image: mariadb:10.11
+      image: mariadb:10.11.19-jammy@sha256:0d0945c57f75b3a3b9ebe71aedaaad005fa5305054e8fca3d2e42a8c92b43b5e
       depends_on:
         - unbound-mailcow
         - netfilter-mailcow
@@ -42,7 +42,7 @@ services:
             - mysql
 
     redis-mailcow:
-      image: redis:7.4.6-alpine
+      image: redis:7.4.6-alpine3.21@sha256:3b73847e72874be07e6657b129a94761662b79bc0f679273757d4218573b2a98
       entrypoint: ["/bin/sh","/redis-conf.sh"]
       volumes:
         - redis-vol-1:/data/
@@ -65,7 +65,7 @@ services:
             - redis
 
     clamd-mailcow:
-      image: ghcr.io/mailcow/clamd:1.71
+      image: ghcr.io/mailcow/clamd:1.71@sha256:afcb57f44f668ee792427ff9951d26226e58c03b4ac7789cf32a611468e58f59
       restart: always
       depends_on:
         unbound-mailcow:
@@ -84,7 +84,7 @@ services:
             - clamd
 
     rspamd-mailcow:
-      image: ghcr.io/mailcow/rspamd:2.4
+      image: ghcr.io/mailcow/rspamd:2.4@sha256:76cdddf27945b2c704160081dce5265dccf2c5aeb5af3e58367d8a2c8ad461bd
       stop_grace_period: 30s
       depends_on:
         - dovecot-mailcow
@@ -117,7 +117,7 @@ services:
             - rspamd
 
     php-fpm-mailcow:
-      image: ghcr.io/mailcow/phpfpm:1.94
+      image: ghcr.io/mailcow/phpfpm:1.94@sha256:e72e5c9d0725fcafe975de88c18377ff63f083c62527b659561c8ab3c74c90a0
       command: "php-fpm -d date.timezone=${TZ} -d expose_php=0"
       depends_on:
         - redis-mailcow
@@ -200,7 +200,7 @@ services:
             - phpfpm
 
     sogo-mailcow:
-      image: ghcr.io/mailcow/sogo:1.136
+      image: ghcr.io/mailcow/sogo:1.136@sha256:41c5a376f116a923be8c3d27fbc3e785f77d6ad12c38d2e44cdd2842356b5ffc
       environment:
         - DBNAME=${DBNAME}
         - DBUSER=${DBUSER}
@@ -252,7 +252,7 @@ services:
             - sogo
 
     dovecot-mailcow:
-      image: ghcr.io/mailcow/dovecot:2.35
+      image: ghcr.io/mailcow/dovecot:2.35@sha256:d75a2a9b342146690fe6eba47ea28da639c96cc79dbff60d14249f1754d74dca
       depends_on:
         - mysql-mailcow
         - netfilter-mailcow
@@ -339,7 +339,7 @@ services:
             - dovecot
 
     postfix-mailcow:
-      image: ghcr.io/mailcow/postfix:1.81
+      image: ghcr.io/mailcow/postfix:1.81@sha256:c00e7a278b2d2e537a253c683652e85e92c54853d1b37af37521668bd5d86f3b
       depends_on:
         mysql-mailcow:
           condition: service_started
@@ -382,7 +382,7 @@ services:
             - postfix
 
     postfix-tlspol-mailcow:
-      image: ghcr.io/mailcow/postfix-tlspol:1.0
+      image: ghcr.io/mailcow/postfix-tlspol:1.0@sha256:15822cf75c5ff3b1b38b2d44055632057b507b81223a86421ae41c4b9401ccd4
       depends_on:
         unbound-mailcow:
           condition: service_healthy
@@ -404,7 +404,7 @@ services:
             - postfix-tlspol
 
     memcached-mailcow:
-      image: memcached:alpine
+      image: memcached:1.6.45-alpine3.24@sha256:6d687bc26426d092694743054fc674fc54d3c161fefa1ad20b54192f8580a8c1
       restart: always
       environment:
         - TZ=${TZ}
@@ -419,7 +419,7 @@ services:
         - php-fpm-mailcow
         - sogo-mailcow
         - rspamd-mailcow
-      image: ghcr.io/mailcow/nginx:1.05
+      image: ghcr.io/mailcow/nginx:1.05@sha256:f2389a5727d62ff8dfe488310da5d4602bb0ba2fa12fd8b6cf06ee71f3f13ab6
       dns:
         - ${IPV4_NETWORK:-172.22.1}.254
       environment:
@@ -465,7 +465,7 @@ services:
           condition: service_started
         unbound-mailcow:
           condition: service_healthy
-      image: ghcr.io/mailcow/acme:1.94
+      image: ghcr.io/mailcow/acme:1.94@sha256:de55fb7f741f738697cb0f82b295d937ee98f8b07d47578574d387204a3ca253
       dns:
         - ${IPV4_NETWORK:-172.22.1}.254
       environment:
@@ -502,7 +502,7 @@ services:
             - acme
 
     netfilter-mailcow:
-      image: ghcr.io/mailcow/netfilter:1.63
+      image: ghcr.io/mailcow/netfilter:1.63@sha256:6af47b9f650a458cd101f7d95f12f55d68be3eceb0c80533006e29c602128dfc
       stop_grace_period: 30s
       restart: always
       privileged: true
@@ -522,7 +522,7 @@ services:
         - /lib/modules:/lib/modules:ro
 
     watchdog-mailcow:
-      image: ghcr.io/mailcow/watchdog:2.09
+      image: ghcr.io/mailcow/watchdog:2.09@sha256:b6d74ced697b1dd3ff1d44916d071392c7acd2b72b608fac51928a8e2e598535
       dns:
         - ${IPV4_NETWORK:-172.22.1}.254
       tmpfs:
@@ -597,7 +597,7 @@ services:
             - watchdog
 
     dockerapi-mailcow:
-      image: ghcr.io/mailcow/dockerapi:2.11
+      image: ghcr.io/mailcow/dockerapi:2.11@sha256:c74fdaa875b5d161d0a63758ad64cba1922c090fcd2bca3a73364dea12a4dbe1
       security_opt:
         - label=disable
       restart: always
@@ -617,7 +617,7 @@ services:
             - dockerapi
 
     olefy-mailcow:
-      image: ghcr.io/mailcow/olefy:1.15
+      image: ghcr.io/mailcow/olefy:1.15@sha256:cec980cddf162594f5f1a7b575ae95c0f17f0c42febcfac94a478eca2d2bfd9e
       restart: always
       environment:
         - TZ=${TZ}
@@ -636,7 +636,7 @@ services:
             - olefy
 
     ofelia-mailcow:
-      image: mcuadros/ofelia:latest
+      image: mcuadros/ofelia:0.3.22@sha256:efcbe2c5cf658a25de6443c1462d653f9cc03791d642e01fc6c638a00f97e492
       restart: always
       command: daemon --docker -f label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}
       environment:

@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:1.31-alpine3.24@sha256:a3554c0d0b48177b1413c26e01f695334428020d9df01243fbae3e11cfd17417
 LABEL maintainer "The Infrastructure Company GmbH <info@servercow.de>"
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
