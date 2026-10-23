@@ -1,6 +1,6 @@
 services:
     prometheus-exporter-mailcow:
-      image: ghcr.io/mailcow/prometheus-exporter:2
+      image: ghcr.io/mailcow/prometheus-exporter:2@sha256:cb76395b84ebee60abdf203e177c99d38caf2eefb56b688a42ead1a68973b345
       ports:
         - "9099:9099"
       restart: always

@@ -1,4 +1,4 @@
-FROM golang:1.25-bookworm AS builder
+FROM golang:1.25.14-bookworm@sha256:3b4a11519ad929d1e1d261a12cff056f0c85b735253d7d861346b9c6f8b36437 AS builder
 WORKDIR /src
 
 ENV CGO_ENABLED=0 \
@@ -11,7 +11,7 @@ RUN git clone --branch v${VERSION} https://github.com/Zuplu/postfix-tlspol && \
     scripts/build.sh build-only
 
 
-FROM debian:bookworm-slim
+FROM debian:12.15-slim@sha256:7ff6ba31527b9e336162fa061746c366c4b2032f4d2cff2078bea43f78efe3f8
 LABEL maintainer="The Infrastructure Company GmbH <info@servercow.de>"
 
 ARG DEBIAN_FRONTEND=noninteractive

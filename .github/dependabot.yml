@@ -1,0 +1,30 @@
+version: 2
+
+updates:
+
+  - package-ecosystem: docker
+    directories:
+    - /data/Dockerfiles/acme
+    - /data/Dockerfiles/backup
+    - /data/Dockerfiles/clamd
+    - /data/Dockerfiles/dockerapi
+    - /data/Dockerfiles/dovecot
+    - /data/Dockerfiles/netfilter
+    - /data/Dockerfiles/nginx
+    - /data/Dockerfiles/olefy
+    - /data/Dockerfiles/phpfpm
+    - /data/Dockerfiles/postfix-tlspol
+    - /data/Dockerfiles/postfix
+    - /data/Dockerfiles/rspamd
+    - /data/Dockerfiles/sogo
+    - /data/Dockerfiles/unbound
+    - /data/Dockerfiles/watchdog
+    - /
+    - /helper-scripts/docker-compose.override.yml.d/EXTERNAL_MYSQL_SOCKET
+    - /helper-scripts/docker-compose.override.yml.d/PROMETHEUS_EXPORTER
+    schedule:
+      interval: weekly
+    groups:
+      docker-images:
+        patterns:
+        - '*'
